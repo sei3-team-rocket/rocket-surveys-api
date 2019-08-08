@@ -1,13 +1,11 @@
 const mongoose = require('mongoose')
 
 const answerSchema = new mongoose.Schema({
-  answerOne: {
-    type: Number,
-    required: true
+  yes: {
+    type: Number
   },
-  answerTwo: {
-    type: Number,
-    required: true
+  no: {
+    type: Number
   },
   owner: {
     type: mongoose.Schema.Types.ObjectId,
@@ -16,7 +14,8 @@ const answerSchema = new mongoose.Schema({
   },
   survey: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Survey'
+    ref: 'Survey',
+    required: true
   }
 }, {
   timestamps: true
