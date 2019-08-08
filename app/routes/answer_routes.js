@@ -31,8 +31,8 @@ const router = express.Router()
 // POST /answers
 router.post('/answers', requireToken, (req, res, next) => {
   // set owner of new answer to be current user
+  console.log(req)
   req.body.answer.owner = req.user.id
-
   Answer.create(req.body.answer)
     // respond to succesful `create` with status 201 and JSON of new "answer"
     .then(answer => {
@@ -98,3 +98,5 @@ router.delete('/answers/:id', requireToken, (req, res, next) => {
     // if an error occurs, pass it to the handler
     .catch(next)
 })
+
+module.exports = router
