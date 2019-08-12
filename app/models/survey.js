@@ -6,6 +6,16 @@ const surveySchema = new mongoose.Schema({
     required: true,
     unique: true
   },
+  answer: {
+    yes: {
+      type: Number,
+      default: 0
+    },
+    no: {
+      type: Number,
+      default: 0
+    }
+  },
   owner: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
