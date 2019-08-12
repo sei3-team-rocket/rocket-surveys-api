@@ -5,6 +5,8 @@ const passport = require('passport')
 
 // pull in Mongoose model for responses
 const Response = require('../models/response')
+const Survey = require('../models/survey')
+
 
 // this is a collection of methods that help us detect situations when we need
 // to throw a custom error
@@ -29,8 +31,9 @@ const router = express.Router()
 
 // INDEX
 // GET /responses
-router.get('/responses', requireToken, (req, res, next) => {
+router.get('/responses', (req, res, next) => {
   Response.find()
+    .populate('owner')
     .then(responses => {
       // `responses` will be an array of Mongoose documents
       // we want to convert each one to a POJO, so we use `.map` to
@@ -61,11 +64,21 @@ router.get('/responses/:id', requireToken, (req, res, next) => {
 router.post('/responses', requireToken, (req, res, next) => {
   // set owner of new response to be current user
   req.body.response.owner = req.user.id
-
+  let survey_id = req.body.response.survey
+  let response = req.body.response
+  console.log(req.body.response)
   Response.create(req.body.response)
     // respond to succesful `create` with status 201 and JSON of new "response"
     .then(response => {
-      res.status(201).json({ response: response.toObject() })
+      Survey.findById(survey_id)
+        .then(foundSurvey => {
+          foundSurvey.responses.push(response._id)
+          let survey = foundSurvey
+          return foundSurvey.update(survey)
+        })
+    })
+    .then(() => {
+      res.status(201).json({response})
     })
     // if an error occurs, pass it off to our error handler
     // the error handler needs the error message and the `res` object so that it
