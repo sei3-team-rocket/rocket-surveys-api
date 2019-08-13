@@ -7,7 +7,6 @@ const passport = require('passport')
 const Response = require('../models/response')
 const Survey = require('../models/survey')
 
-
 // this is a collection of methods that help us detect situations when we need
 // to throw a custom error
 const customErrors = require('../../lib/custom_errors')
@@ -64,13 +63,12 @@ router.get('/responses/:id', requireToken, (req, res, next) => {
 router.post('/responses', requireToken, (req, res, next) => {
   // set owner of new response to be current user
   req.body.response.owner = req.user.id
-  let survey_id = req.body.response.survey
+  let surveyId = req.body.response.survey
   let response = req.body.response
-  console.log(req.body.response)
   Response.create(req.body.response)
     // respond to succesful `create` with status 201 and JSON of new "response"
     .then(response => {
-      Survey.findById(survey_id)
+      Survey.findById(surveyId)
         .then(foundSurvey => {
           foundSurvey.responses.push(response._id)
           let survey = foundSurvey

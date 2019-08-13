@@ -47,7 +47,7 @@ router.post('/surveys', requireToken, (req, res, next) => {
 // index
 router.get('/surveys', (req, res, next) => {
   Survey.find()
-  .populate('responses')
+    .populate('responses')
     .then(surveys => {
       // `surveys` will be an array of Mongoose documents
       // we want to convert each one to a POJO, so we use `.map` to
